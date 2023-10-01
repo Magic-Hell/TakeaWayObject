@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+    @Autowired    private EmployeeService employeeService;
 
     //员工登录
     @PostMapping("/login")
@@ -59,6 +58,13 @@ public class EmployeeController {
         //登录成功，将员工ID存入Session并返回登录成功结果
         request.getSession().setAttribute("employee",emp.getId());
         return R.success(emp);
+    }
+
+    //员工退出
+    @PostMapping("/logout")
+    public R<String> logout(HttpServletRequest request){
+        request.getSession().removeAttribute("employee");
+        return R.success("退出成功");
     }
 
 }
