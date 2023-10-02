@@ -1,12 +1,14 @@
 package com.magichell.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.magichell.reggie.common.R;
 import com.magichell.reggie.entity.Employee;
 import com.magichell.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,6 +84,34 @@ public class EmployeeController {
         employee.setUpdateUser(empID);
         employeeService.save(employee);
         return R.success("新增员工成功");
+    }
+
+    //员工分页信息查询
+    @GetMapping("/page")
+    public R<Page> page(int page,int pageSize,String name){
+        log.info("page = {},pageSize = {},name = {}",page,pageSize,name);
+
+        //构造分页构造起
+        Page pageInfo = new Page (page,pageSize);
+        //构造条件构造起
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        //添加过滤条件
+        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+        //添加排序条件
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+        //执行查询
+        employeeService.page(pageInfo,queryWrapper);
+        return R.success(pageInfo);
+    }
+
+    @PutMapping
+    public R<String> update (HttpServletRequest request,@RequestBody Employee employee){
+        log.info(employee.toString());
+        employee.setUpdateTime(LocalDateTime.now());
+        Long empId = (Long)request.getSession().getAttribute("employee");
+        employee.setUpdateUser(empId);
+        employeeService.updateById(employee);
+        return R.success("员工信息修改成功");
     }
 
 }
