@@ -23,4 +23,12 @@ public class GlobalExceptionHandler {
         }
         return R.error("位置错误");
     }
+
+
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException customException){
+        log.error(customException.getMessage());
+        return R.error(customException.getMessage());
+    }
+
 }
