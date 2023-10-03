@@ -76,12 +76,12 @@ public class EmployeeController {
         log.info("新增员工,员工信息:{}",employee.toString());
         //设置初始密码，需要进行MD%加密
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        //获取当前登录用户的id
-        Long empID = (Long)request.getSession().getAttribute("employee");
-        employee.setCreateUser(empID);
-        employee.setUpdateUser(empID);
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        //获取当前登录用户的id
+//        Long empID = (Long)request.getSession().getAttribute("employee");
+//        employee.setCreateUser(empID);
+//        employee.setUpdateUser(empID);
         employeeService.save(employee);
         return R.success("新增员工成功");
     }

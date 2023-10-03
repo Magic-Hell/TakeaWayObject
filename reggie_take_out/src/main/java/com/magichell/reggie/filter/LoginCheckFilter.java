@@ -4,6 +4,7 @@ package com.magichell.reggie.filter;
 //检查用户是否已经完成登录
 
 import com.alibaba.fastjson.JSON;
+import com.magichell.reggie.common.BaseContext;
 import com.magichell.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -44,6 +45,8 @@ public class LoginCheckFilter implements Filter {
         }
         //4. 判断登录状态，如果已经登录，则直接放行
         if (request.getSession().getAttribute("employee") != null){
+            Long empId = (long)request.getSession().getAttribute("employee");
+            BaseContext.setCurreentId(empId);
             filterChain.doFilter(request,response);
             return;
         }
